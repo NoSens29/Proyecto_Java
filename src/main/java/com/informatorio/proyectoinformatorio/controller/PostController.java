@@ -1,7 +1,9 @@
 package com.informatorio.proyectoinformatorio.controller;
 
 import com.informatorio.proyectoinformatorio.entity.Post;
+import com.informatorio.proyectoinformatorio.entity.User;
 import com.informatorio.proyectoinformatorio.service.PostService;
+import com.informatorio.proyectoinformatorio.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,14 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+    @Autowired
+    private UserService userService;
 
     //Create a new post
-    @PostMapping
-    public ResponseEntity<?> create(@RequestBody Post post) {
+    @PostMapping("/{userId}/post")
+    public ResponseEntity<?> create(@RequestBody Post post, @RequestParam Long userId) {
+
+
         return  ResponseEntity.status(HttpStatus.CREATED).body(postService.save(post));
     }
 

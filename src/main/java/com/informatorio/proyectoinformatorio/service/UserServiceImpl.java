@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,12 @@ public class UserServiceImpl  implements UserService{
     @Transactional(readOnly = true)
     public List<User> findByCity(String city) {
         return userRepository.findByCity(city);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> findByDate(LocalDate date) {
+        return userRepository.findByDate(date);
     }
 
     @Override

@@ -2,10 +2,14 @@ package com.informatorio.proyectoinformatorio.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
+import java.time.LocalDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name= "users")
@@ -16,12 +20,14 @@ public class User {
     private Long id;
 
     @Column(name="name", nullable = false,length = 30)
+    @NotBlank
+    @Size(min = 4)
     private String name;
 
-    //@Column(unique = true)
-    //@OneToMany(mappedBy = "author", fetch = FetchType.LAZY,
-    //    cascade = CascadeType.ALL)
-    //private Set<Post> posts;
+
+    @OneToMany
+    private List<Post> posts = new ArrayList<>();
+
 
     private String email;
 
@@ -30,8 +36,7 @@ public class User {
     @JsonIgnore
     private String password;
 
-    @CreationTimestamp
-    private LocalDate creationdate;
+    private LocalDate date =  LocalDate.now();
 
     private String city;
 
@@ -39,7 +44,7 @@ public class User {
 
     private String country;
 
-
+    //getter and setters
     public Long getId(){
         return id;
     }
@@ -81,11 +86,11 @@ public class User {
     }
 
     public LocalDate getCreationdate(){
-        return creationdate;
+        return date;
     }
 
-    public void setCreationdate(LocalDate creationdate){
-        this.creationdate = creationdate;
+    public void setCreationdate(LocalDate date){
+        this.date = date;
     }
 
     public String getCity(){
@@ -110,5 +115,10 @@ public class User {
 
     public void setCountry(String country){
         this.country = country;
+    }
+
+    public void addPost(Post post){
+        this.posts.add(post);
+        post.setAuthor(this);
     }
 }

@@ -1,6 +1,7 @@
 package com.informatorio.proyectoinformatorio.entity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -17,13 +18,13 @@ public class Post {
 
     private String content;
 
-    private Date creationdate;
+    private LocalDate creationdate = LocalDate.now();
 
     private Boolean published;
 
-    //@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    //@JoinColumn(name = "author_id", nullable = false)
-    //private User author;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "author", referencedColumnName = "id")
+    private User author;
 
     public Long getId() {
         return id;
@@ -56,22 +57,22 @@ public class Post {
         this.content = content;
     }
 
-    public Date getCreationdate() {
+    public LocalDate getCreationdate() {
         return creationdate;
     }
 
-    public void setCreationdate(Date creationdate) {
+    public void setCreationdate(LocalDate creationdate) {
         this.creationdate = creationdate;
     }
 
-    /*
+
     public User getAuthor() {
         return author;
     }
     public void setAuthor(User author) {
         this.author = author;
     }
-    */
+
 
     public Boolean getPublished() {
         return published;

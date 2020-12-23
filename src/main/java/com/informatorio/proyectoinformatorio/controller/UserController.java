@@ -1,9 +1,10 @@
 package com.informatorio.proyectoinformatorio.controller;
 
+import com.informatorio.proyectoinformatorio.entity.Post;
 import com.informatorio.proyectoinformatorio.entity.User;
+import com.informatorio.proyectoinformatorio.service.PostService;
 import com.informatorio.proyectoinformatorio.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PostService postService;
 
     //Create a new user
     @PostMapping
@@ -73,25 +77,52 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-
     //Read all Users
     @GetMapping
-    public List<User> readAll(
-            @RequestParam(required = false) @DateTimeFormat(iso=DateTimeFormat.ISO.DATE)LocalDate date,
-            @RequestParam(required = false) Integer size) {
+    public List<User> readAll(){
+        List<User> users = StreamSupport
+                .stream(userService.finAll().spliterator(),false)
+                .collect(Collectors.toList());
+        return users;
+    }
 
-            List<User> users= StreamSupport
-                    .stream(userService.finAll().spliterator(), false)
-                    .collect(Collectors.toList());
-            return  users;
+    //Read all Users by date
+    @GetMapping("/searchDate")
+    public ResponseEntity<?> finUserAfterCreationDate(
+            //@RequestParam(required = false) @DateTimeFormat(iso=DateTimeFormat.ISO.DATE)LocalDate date, @RequestParam(required = false) Integer size) {
+            @RequestParam(required = false) @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) LocalDate date){
+            List<User> user = userService.findByDate(date);
+            return  new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 
     //Read users by city
-    @GetMapping("/search")
+    @GetMapping("/searchCity")
     public ResponseEntity<?> findByCity(@RequestParam String ciudad){
         List<User> user = userService.findByCity(ciudad);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
+    //Create a new post
+    @PostMapping("/{userId}/post")
+    public ResponseEntity<?> create(@PathVariable Long userId, @RequestBody Post postDetails) {
+       //trato id user
+       Optional<User> user = userService.findById(userId);
+       if (!user.isPresent()){
+           return ResponseEntity.notFound().build();
+       }
+
+
+       //Guardo el post en el la lista del user
+       user.get().addPost(postDetails);
+       //postService.save(postDetails);
+       //ResponseEntity.status(HttpStatus.IM_USED).body(userService.save(user.get()));
+
+       //Creo el post
+       //return  ResponseEntity.status(HttpStatus.CREATED).body(postService.save(postDetails));
+        return  ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user.get()));
+
+    }
+
 
 }
