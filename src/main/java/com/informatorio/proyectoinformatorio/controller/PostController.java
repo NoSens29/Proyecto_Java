@@ -23,16 +23,10 @@ public class PostController {
     @Autowired
     private UserService userService;
 
-    //Create a new post
-    @PostMapping("/{userId}/post")
-    public ResponseEntity<?> create(@RequestBody Post post, @RequestParam Long userId) {
 
 
-        return  ResponseEntity.status(HttpStatus.CREATED).body(postService.save(post));
-    }
-
-    //Read an user
-    @GetMapping("/{id")
+    //Read an user (not necesary)
+    @GetMapping("/{id}")
     public ResponseEntity<?> read(@PathVariable(value = "id") Long postId){
         Optional<Post> oPost = postService.findById(postId);
 
@@ -73,7 +67,7 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
-    //Read all posts
+    //Read all posts (not necesary)
     @GetMapping
     public List <Post> readAll() {
 
@@ -82,5 +76,15 @@ public class PostController {
                 .collect(Collectors.toList());
         return  posts;
     }
+
+    /*
+    //Get all post with a word on the title
+    @GetMapping("/search")
+    public ResponseEntity<?> findStringOnTitle(@RequestParam String title){
+       List <Post> posts = postService.findStringOnTitle(title);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+    */
+
 
 }

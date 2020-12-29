@@ -26,6 +26,12 @@ public class Post {
     @JoinColumn(name = "author", referencedColumnName = "id")
     private User author;
 
+    public  Post(){
+
+    }
+    public Post(String title, String description, String content, LocalDate creationdate, Boolean published){ }
+
+
     public Long getId() {
         return id;
     }
@@ -82,7 +88,7 @@ public class Post {
         this.published = published;
     }
 
-
+    public String findStringOnTitle(){ return title;}
 
 
 }

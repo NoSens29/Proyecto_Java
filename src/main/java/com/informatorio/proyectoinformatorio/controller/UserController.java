@@ -77,7 +77,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    //Read all Users
+    //Read all Users(2)
     @GetMapping
     public List<User> readAll(){
         List<User> users = StreamSupport
@@ -86,7 +86,16 @@ public class UserController {
         return users;
     }
 
-    //Read all Users by date
+
+    //Read users by city(3)
+    @GetMapping("/searchCity")
+    public ResponseEntity<?> findByCity(@RequestParam String ciudad){
+        List<User> user = userService.findByCity(ciudad);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+
+    //Read all Users by date(4)
     @GetMapping("/searchDate")
     public ResponseEntity<?> finUserAfterCreationDate(
             //@RequestParam(required = false) @DateTimeFormat(iso=DateTimeFormat.ISO.DATE)LocalDate date, @RequestParam(required = false) Integer size) {
@@ -96,12 +105,6 @@ public class UserController {
     }
 
 
-    //Read users by city
-    @GetMapping("/searchCity")
-    public ResponseEntity<?> findByCity(@RequestParam String ciudad){
-        List<User> user = userService.findByCity(ciudad);
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
 
     //Create a new post
     @PostMapping("/{userId}/post")
@@ -115,11 +118,8 @@ public class UserController {
 
        //Guardo el post en el la lista del user
        user.get().addPost(postDetails);
-       //postService.save(postDetails);
-       //ResponseEntity.status(HttpStatus.IM_USED).body(userService.save(user.get()));
 
        //Creo el post
-       //return  ResponseEntity.status(HttpStatus.CREATED).body(postService.save(postDetails));
         return  ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user.get()));
 
     }
