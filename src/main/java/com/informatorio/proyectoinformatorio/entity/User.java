@@ -28,7 +28,7 @@ public class User {
     @OneToMany
     private List<Post> posts = new ArrayList<>();
 
-
+    @Column(unique = true)
     private String email;
 
     private String lastname;
